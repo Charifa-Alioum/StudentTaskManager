@@ -5,13 +5,20 @@
     android:layout_height="match_parent"
     tools:context=".HomeworkFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Homework"
-        android:textSize="36dp"
-        android:gravity="center"
-        android:textColor="@color/white"/>
+        android:id="@+id/list_view_homework"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fab_add_homework"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_input_add"/>
+
+
 
 </FrameLayout>

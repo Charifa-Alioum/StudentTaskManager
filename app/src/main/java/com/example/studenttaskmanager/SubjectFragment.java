@@ -1,12 +1,23 @@
 package com.example.studenttaskmanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.example.studenttaskmanagerdetails.ColorPickerActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,51 +25,66 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class SubjectFragment extends Fragment {
+    private ListView subjectListView;
+    private FloatingActionButton addSubjectFab;
+    private ArrayList<String> subjectList;
+    private ArrayAdapter<String> adapter;
+    private String[] subjects={ };
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final int COLOR_PICKER_REQUEST=1;
 
     public SubjectFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SubjectFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static SubjectFragment newInstance(String param1, String param2) {
         SubjectFragment fragment = new SubjectFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_subject, container, false);
+        View view=inflater.inflate(R.layout.fragment_subject,container,false);
+        subjectListView=view.findViewById(R.id.subject_list_view);
+        addSubjectFab=view.findViewById(R.id.addSubjectFab);
+
+
+        subjectList=new ArrayList<>();
+        adapter=new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,subjectList);
+
+        subjectListView.setAdapter(adapter);
+
+        subjectListView.setOnItemClickListener((adapterView, view1, i, l) -> {
+            String selectedItem = subjects[i];
+            Toast.makeText(getContext(), "Clic sur: " + selectedItem, Toast.LENGTH_SHORT).show();
+        });
+        addSubjectFab.setOnClickListener(v ->{
+            Intent intent=new Intent(getActivity(), ColorPickerActivity.class);
+            startActivityForResult(intent,COLOR_PICKER_REQUEST);
+        });
+        return view;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+        if(requestCode==COLOR_PICKER_REQUEST && resultCode== AppCompatActivity.RESULT_OK){
+            String subject=data.getStringExtra("Subject");
+
+            subjectList.add(subject);
+            adapter.notifyDataSetChanged();
+
+            Toast.makeText(getContext(), "Nouvelle matière", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }
