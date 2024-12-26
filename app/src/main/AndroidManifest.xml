@@ -13,6 +13,18 @@
         android:theme="@style/Base.Theme.StudentTaskManager"
         tools:targetApi="31">
         <activity
+            android:name="com.example.studenttaskmanagerdetails.AddEventActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.studenttaskmanagerdetails.AddHomeworkActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.studenttaskmanagerdetails.ChildItemsActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.studenttaskmanagerdetails.ColorPickerActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
