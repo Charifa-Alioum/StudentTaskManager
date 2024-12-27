@@ -73,12 +73,12 @@ public class HomeworkFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode,resultCode,data);
         if(requestCode==ADD_HOMEWORK_REQUEST && resultCode== AppCompatActivity.RESULT_OK){
-            String subject=data.getStringExtra("Subject");
-
-            homeworkItems.add(subject);
+            String homework=data.getStringExtra("Homework");
+            HomeworkItem homeworkItem=new HomeworkItem(homework,false);
+            homeworkItems.add(homeworkItem);
             adapter.notifyDataSetChanged();
 
-            Toast.makeText(getContext(), "Nouvelle matière", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Nouveau devoir", Toast.LENGTH_SHORT).show();
         }
     }
 }

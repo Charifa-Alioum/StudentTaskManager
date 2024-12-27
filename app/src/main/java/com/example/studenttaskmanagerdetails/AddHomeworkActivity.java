@@ -1,10 +1,12 @@
 package com.example.studenttaskmanagerdetails;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,16 +55,17 @@ public class AddHomeworkActivity extends AppCompatActivity {
 
         });
 
-        buttonAddHomework.setOnClickListener(v -> {
-            String name=editTextName.getText().toString();
-            HomeworkItem item=new HomeworkItem(name,false);
-            HomeworkFragment fragment=(HomeworkFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        buttonAddHomework.setOnClickListener(v -> addHomeworkToList());
 
-            if(fragment!=null){
-                fragment.addHomeworkItem(item);
-            }
-            finish();
-        });
+    }
 
+    private void addHomeworkToList(){
+        String name=editTextName.getText().toString();
+        Intent intent=new Intent();
+        intent.putExtra("Homework",name);
+        setResult(RESULT_OK,intent);
+
+        finish();
+        Toast.makeText(this, "Devoir enregistrée", Toast.LENGTH_SHORT).show();
     }
 }

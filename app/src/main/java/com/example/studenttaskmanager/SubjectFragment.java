@@ -10,11 +10,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.studenttaskmanagerdetails.ColorPickerActivity;
+import com.example.studenttaskmanagerdetails.SubjectDetailsActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ public class SubjectFragment extends Fragment {
     private String[] subjects={ };
 
     private static final int COLOR_PICKER_REQUEST=1;
+
 
     public SubjectFragment() {
         // Required empty public constructor
@@ -63,13 +66,19 @@ public class SubjectFragment extends Fragment {
 
         subjectListView.setAdapter(adapter);
 
-        subjectListView.setOnItemClickListener((adapterView, view1, i, l) -> {
-            String selectedItem = subjects[i];
-            Toast.makeText(getContext(), "Clic sur: " + selectedItem, Toast.LENGTH_SHORT).show();
+        subjectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent=new Intent(getActivity(), SubjectDetailsActivity.class);
+                startActivity(intent);
+
+
+            }
         });
         addSubjectFab.setOnClickListener(v ->{
             Intent intent=new Intent(getActivity(), ColorPickerActivity.class);
             startActivityForResult(intent,COLOR_PICKER_REQUEST);
+            Toast.makeText(getContext(), "Nouvelle matière", Toast.LENGTH_SHORT).show();
         });
         return view;
     }
@@ -83,7 +92,6 @@ public class SubjectFragment extends Fragment {
             subjectList.add(subject);
             adapter.notifyDataSetChanged();
 
-            Toast.makeText(getContext(), "Nouvelle matière", Toast.LENGTH_SHORT).show();
         }
     }
 
