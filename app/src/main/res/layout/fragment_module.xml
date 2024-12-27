@@ -1,13 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ModuleFragment">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your average"
+        android:textSize="18dp"
+        android:textColor="@color/red"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <ProgressBar
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:progress="20"
+            android:max="100"
+            style="@android:style/Widget.ProgressBar.Small"
+            android:indeterminate="false"
+            android:visibility="visible"
+            android:progressTint="@color/black"
+            android:background="@color/white"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/average_value"
+            android:layout_centerInParent="true"
+            android:text="8.55"
+            android:textSize="24dp"
+            android:textColor="@color/red"/>
+    </RelativeLayout>
+
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/list_view_modules"/>
 
-</FrameLayout>
+</LinearLayout>

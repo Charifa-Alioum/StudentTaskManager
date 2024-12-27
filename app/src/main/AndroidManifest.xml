@@ -13,6 +13,9 @@
         android:theme="@style/Base.Theme.StudentTaskManager"
         tools:targetApi="31">
         <activity
+            android:name="com.example.studenttaskmanagerdetails.SubjectDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name="com.example.studenttaskmanagerdetails.AddEventActivity"
             android:exported="false" />
         <activity
