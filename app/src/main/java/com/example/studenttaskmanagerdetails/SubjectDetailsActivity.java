@@ -1,5 +1,6 @@
 package com.example.studenttaskmanagerdetails;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -25,6 +27,8 @@ public class SubjectDetailsActivity extends AppCompatActivity {
     private EditText subjectCCInput,subjectSNInput,subjectTPInput;
 
     private int currentColor= Color.BLUE;
+
+    public static final String CURRENT_SUBJECT_NAME="currentSubject";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +48,12 @@ public class SubjectDetailsActivity extends AppCompatActivity {
 
         TextView changeColor=findViewById(R.id.change_color);
 
-
         Intent intent=getIntent();
-        String subjectName=intent.getStringExtra("subjectName");
-        if(subjectName!=null){
-            nameInput.setText(subjectName);
-        }
+
+        String currentName=intent.getStringExtra(CURRENT_SUBJECT_NAME);
+        int position=intent.getIntExtra("element_position",-1);
+
+        nameInput.setText(currentName);
 
         changeColor.setOnClickListener(v-> changeCircleColor());
 
@@ -65,18 +69,31 @@ public class SubjectDetailsActivity extends AppCompatActivity {
             subjectTPInput.setVisibility(isChecked ? View.VISIBLE: View.GONE);
         });
 
-        saveButton.setOnClickListener(v-> saveSubjectDetails());
+        saveButton.setOnClickListener(v-> saveSubjectDetails(position));
     }
 
     private void changeCircleColor(){
+        final String[] colors={"Red","Green","Yellow","Cyan","Magenta","Black","White"};
+        final int[] colorValues={Color.RED,Color.GREEN,Color.YELLOW,Color.CYAN,Color.MAGENTA,Color.BLACK,Color.WHITE};
 
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("Pick a color")
+                .setItems(colors, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        currentColor=colorValues[i];
+                        colorCircle.setBackgroundColor(currentColor);
+                    }
+                });
+        builder.create().show();
     }
 
-    private void saveSubjectDetails(){
+    private void saveSubjectDetails(int position){
         String updatedName=nameInput.getText().toString();
         Intent resultIntent=new Intent();
 
-        resultIntent.putExtra("Subject",updatedName);
+        resultIntent.putExtra(CURRENT_SUBJECT_NAME,updatedName);
+        resultIntent.putExtra("element_position",position);
 
         setResult(RESULT_OK,resultIntent);
         finish();

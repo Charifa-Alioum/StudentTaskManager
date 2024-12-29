@@ -21,11 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SubjectFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class SubjectFragment extends Fragment {
     private ListView subjectListView;
     private FloatingActionButton addSubjectFab;
@@ -34,6 +30,7 @@ public class SubjectFragment extends Fragment {
     private String[] subjects={ };
 
     private static final int COLOR_PICKER_REQUEST=1;
+    private static final int SUBJECT_MODIFICATION_REQUEST=2;
 
 
     public SubjectFragment() {
@@ -69,9 +66,12 @@ public class SubjectFragment extends Fragment {
         subjectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent=new Intent(getActivity(), SubjectDetailsActivity.class);
-                startActivity(intent);
+                String currentSubject=subjectList.get(i);
 
+                Intent intent=new Intent(getActivity(), SubjectDetailsActivity.class);
+                intent.putExtra(SubjectDetailsActivity.CURRENT_SUBJECT_NAME,currentSubject);
+                intent.putExtra("element_position",i);
+                startActivity(intent);
 
             }
         });
@@ -86,13 +86,28 @@ public class SubjectFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-        if(requestCode==COLOR_PICKER_REQUEST && resultCode== AppCompatActivity.RESULT_OK){
-            String subject=data.getStringExtra("Subject");
+        if(resultCode==AppCompatActivity.RESULT_OK && data!=null){
+            switch (requestCode){
+                case COLOR_PICKER_REQUEST:
+                    String subject=data.getStringExtra("Subject");
 
-            subjectList.add(subject);
-            adapter.notifyDataSetChanged();
+                    subjectList.add(subject);
+                    adapter.notifyDataSetChanged();
 
+                    break;
+
+                case SUBJECT_MODIFICATION_REQUEST:
+                    String newSubjectName=data.getStringExtra(SubjectDetailsActivity.CURRENT_SUBJECT_NAME);
+                    subjectList.set(requestCode,newSubjectName);
+                    adapter.notifyDataSetChanged();
+
+                    break;
+
+                default:
+                    break;
+            }
         }
+
     }
 
 }
