@@ -1,6 +1,7 @@
 package com.example.studenttaskmanager;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -17,17 +18,21 @@ import android.widget.Toast;
 
 import com.example.studenttaskmanagerdetails.ColorPickerActivity;
 import com.example.studenttaskmanagerdetails.SubjectDetailsActivity;
+import com.example.studenttaskmanagerdetails.SubjectItem;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+
+import javax.security.auth.Subject;
 
 
 public class SubjectFragment extends Fragment {
     private ListView subjectListView;
     private FloatingActionButton addSubjectFab;
-    private ArrayList<String> subjectList;
-    private ArrayAdapter<String> adapter;
-    private String[] subjects={ };
+    private ArrayList<String> subjectNameList;
+    private ArrayAdapter<String> nameAdapter;
+    private ArrayList<SubjectItem> subjectList;
+    private ArrayAdapter<SubjectItem> adapter;
 
     private static final int COLOR_PICKER_REQUEST=1;
     private static final int SUBJECT_MODIFICATION_REQUEST=2;
@@ -58,6 +63,8 @@ public class SubjectFragment extends Fragment {
         addSubjectFab=view.findViewById(R.id.addSubjectFab);
 
 
+        subjectNameList=new ArrayList<>();
+        nameAdapter=new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,subjectNameList);
         subjectList=new ArrayList<>();
         adapter=new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,subjectList);
 
@@ -66,12 +73,21 @@ public class SubjectFragment extends Fragment {
         subjectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String currentSubject=subjectList.get(i);
+                SubjectItem currentSubject=subjectList.get(i);
 
                 Intent intent=new Intent(getActivity(), SubjectDetailsActivity.class);
-                intent.putExtra(SubjectDetailsActivity.CURRENT_SUBJECT_NAME,currentSubject);
+                intent.putExtra(SubjectDetailsActivity.CURRENT_SUBJECT_NAME,currentSubject.getSubjectName());
+                intent.putExtra("color",currentSubject.getColor());
+                intent.putExtra("ccCheck",currentSubject.isCcCheckbox());
+                intent.putExtra("ccMark",currentSubject.getCcMark());
+                intent.putExtra("snCheck",currentSubject.isSnCheckbox());
+                intent.putExtra("snMark",currentSubject.getSnMark());
+                intent.putExtra("tpCheck",currentSubject.isTpCheckbox());
+                intent.putExtra("tpMark",currentSubject.getTpMark());
+                intent.putExtra("comment",currentSubject.getCommentZone());
+
                 intent.putExtra("element_position",i);
-                startActivity(intent);
+                startActivityForResult(intent,SUBJECT_MODIFICATION_REQUEST);
 
             }
         });
@@ -91,14 +107,26 @@ public class SubjectFragment extends Fragment {
                 case COLOR_PICKER_REQUEST:
                     String subject=data.getStringExtra("Subject");
 
-                    subjectList.add(subject);
+                    subjectList.add(new SubjectItem(subject, Color.BLUE,false,
+                            0,false,0,false,0,
+                            ""));
                     adapter.notifyDataSetChanged();
 
                     break;
 
                 case SUBJECT_MODIFICATION_REQUEST:
                     String newSubjectName=data.getStringExtra(SubjectDetailsActivity.CURRENT_SUBJECT_NAME);
-                    subjectList.set(requestCode,newSubjectName);
+                    int newSubjectColor=data.getIntExtra("color",Color.BLUE);
+                    boolean newSubjectCCCheckbox=data.getBooleanExtra("ccCheck",false);
+                    double newSubjectCCMark=data.getDoubleExtra("ccMark",0);
+                    boolean newSubjectSNCheckbox=data.getBooleanExtra("snCheck",false);
+                    double newSubjectSNMark=data.getDoubleExtra("snMark",0);
+                    boolean newSubjectTPCheckbox=data.getBooleanExtra("tpCheck",false);
+                    double newSubjectTPMark=data.getDoubleExtra("tpMark",0);
+                    String comment=data.getStringExtra("comment");
+                    subjectList.set(requestCode,new SubjectItem(newSubjectName,newSubjectColor,newSubjectCCCheckbox,
+                            newSubjectCCMark,newSubjectSNCheckbox,newSubjectSNMark,newSubjectTPCheckbox,newSubjectTPMark,
+                            comment));
                     adapter.notifyDataSetChanged();
 
                     break;

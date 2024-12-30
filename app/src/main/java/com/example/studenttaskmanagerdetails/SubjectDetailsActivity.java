@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
@@ -25,6 +26,7 @@ public class SubjectDetailsActivity extends AppCompatActivity {
     private Button saveButton;
     private CheckBox ccCheckbox,snCheckbox,tpCheckbox;
     private EditText subjectCCInput,subjectSNInput,subjectTPInput;
+    private EditText commentText;
 
     private int currentColor= Color.BLUE;
 
@@ -45,15 +47,33 @@ public class SubjectDetailsActivity extends AppCompatActivity {
         subjectCCInput=findViewById(R.id.subject_cc_input);
         subjectSNInput=findViewById(R.id.subject_sn_input);
         subjectTPInput=findViewById(R.id.subject_tp_input);
+        commentText=findViewById(R.id.comments_input);
 
         TextView changeColor=findViewById(R.id.change_color);
 
         Intent intent=getIntent();
 
         String currentName=intent.getStringExtra(CURRENT_SUBJECT_NAME);
+        int color=intent.getIntExtra("color",Color.BLUE);
+        boolean ccCheck=intent.getBooleanExtra("ccCheck",false);
+        double ccMark=intent.getDoubleExtra("ccMark",0);
+        boolean snCheck=intent.getBooleanExtra("snCheck",false);
+        double snMark=intent.getDoubleExtra("snMark",0);
+        boolean tpCheck=intent.getBooleanExtra("tpCheck",false);
+        double tpMark=intent.getDoubleExtra("tpMark",0);
+        String comment=intent.getStringExtra("comment");
+
         int position=intent.getIntExtra("element_position",-1);
 
         nameInput.setText(currentName);
+        colorCircle.setBackgroundColor(color);
+        ccCheckbox.setChecked(ccCheck);
+        subjectCCInput.setText(Double.toString(ccMark));
+        snCheckbox.setChecked(snCheck);
+        subjectSNInput.setText(Double.toString(snMark));
+        tpCheckbox.setChecked(tpCheck);
+        subjectTPInput.setText(Double.toString(tpMark));
+        commentText.setText(comment);
 
         changeColor.setOnClickListener(v-> changeCircleColor());
 
@@ -90,10 +110,15 @@ public class SubjectDetailsActivity extends AppCompatActivity {
 
     private void saveSubjectDetails(int position){
         String updatedName=nameInput.getText().toString();
+        int updatedColor=colorCircle.getSolidColor();
+
         Intent resultIntent=new Intent();
 
         resultIntent.putExtra(CURRENT_SUBJECT_NAME,updatedName);
+        resultIntent.putExtra("color",updatedColor);
         resultIntent.putExtra("element_position",position);
+
+        Toast.makeText(this, "modifications enregistrées", Toast.LENGTH_SHORT).show();
 
         setResult(RESULT_OK,resultIntent);
         finish();
