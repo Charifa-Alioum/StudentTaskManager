@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.studenttaskmanagerdetails.ColorPickerActivity;
+import com.example.studenttaskmanagerdetails.SubjectAdapter;
 import com.example.studenttaskmanagerdetails.SubjectDetailsActivity;
 import com.example.studenttaskmanagerdetails.SubjectItem;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -29,10 +30,8 @@ import javax.security.auth.Subject;
 public class SubjectFragment extends Fragment {
     private ListView subjectListView;
     private FloatingActionButton addSubjectFab;
-    private ArrayList<String> subjectNameList;
-    private ArrayAdapter<String> nameAdapter;
     private ArrayList<SubjectItem> subjectList;
-    private ArrayAdapter<SubjectItem> adapter;
+    private SubjectAdapter adapter;
 
     private static final int COLOR_PICKER_REQUEST=1;
     private static final int SUBJECT_MODIFICATION_REQUEST=2;
@@ -52,7 +51,7 @@ public class SubjectFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        subjectList=new ArrayList<>();
     }
 
     @Override
@@ -63,10 +62,8 @@ public class SubjectFragment extends Fragment {
         addSubjectFab=view.findViewById(R.id.addSubjectFab);
 
 
-        subjectNameList=new ArrayList<>();
-        nameAdapter=new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,subjectNameList);
         subjectList=new ArrayList<>();
-        adapter=new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,subjectList);
+        adapter=new SubjectAdapter(getActivity(), subjectList);
 
         subjectListView.setAdapter(adapter);
 

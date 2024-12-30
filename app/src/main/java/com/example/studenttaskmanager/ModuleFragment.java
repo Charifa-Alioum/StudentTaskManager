@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.studenttaskmanagerdetails.ChildItemsActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ public class ModuleFragment extends Fragment {
     private ListView listViewModules;
     private List<String> moduleList;
     private HashMap<String, List<String>> childItems;
+    private FloatingActionButton addModuleFab;
 
     public ModuleFragment() {
         // Required empty public constructor
@@ -45,11 +47,13 @@ public class ModuleFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_module,container,false);
         listViewModules=view.findViewById(R.id.list_view_modules);
+        addModuleFab=view.findViewById(R.id.addModuleFab);
 
         initModuleList();
 
         ArrayAdapter<String> adapter=new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1,moduleList);
 
+        addModuleFab.setOnClickListener(v-> addModuleToList());
         listViewModules.setAdapter(adapter);
         listViewModules.setOnItemClickListener((parent, view1, position, id) -> {
             String selectedModule=moduleList.get(position);
@@ -58,9 +62,13 @@ public class ModuleFragment extends Fragment {
         return view;
     }
 
+    private void addModuleToList(){
+
+    }
     private void initModuleList(){
         moduleList=new ArrayList<>();
-        moduleList.add("Module 1");
+
+        /*moduleList.add("Module 1");
         moduleList.add("Module 2");
         moduleList.add("Module 3");
         moduleList.add("Module 4");
@@ -84,7 +92,7 @@ public class ModuleFragment extends Fragment {
         List<String> child4=new ArrayList<>();
         child4.add("Child Item 7");
         child4.add("Child Item 8");
-        childItems.put("Module 4",child4);
+        childItems.put("Module 4",child4);*/
     }
 
     private void showChildItems(String selectedModule){

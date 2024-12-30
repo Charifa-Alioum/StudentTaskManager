@@ -3,6 +3,7 @@ package com.example.studenttaskmanagerdetails;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.studenttaskmanager.R;
+import com.example.studenttaskmanagerfeatures.GradeCalculator;
 
 public class SubjectDetailsActivity extends AppCompatActivity {
     private EditText nameInput;
@@ -109,18 +111,51 @@ public class SubjectDetailsActivity extends AppCompatActivity {
     }
 
     private void saveSubjectDetails(int position){
-        String updatedName=nameInput.getText().toString();
-        int updatedColor=colorCircle.getSolidColor();
-
         Intent resultIntent=new Intent();
 
+        String updatedName=nameInput.getText().toString();
+        boolean ccCheck= ccCheckbox.isChecked();
+        double ccMark=Double.parseDouble(subjectCCInput.getText().toString());
+        boolean snCheck= snCheckbox.isChecked();
+        double snMark=Double.parseDouble(subjectSNInput.getText().toString());
+        boolean tpCheck= tpCheckbox.isChecked();
+        double tpMark=Double.parseDouble(subjectTPInput.getText().toString());
+        String comment=commentText.getText().toString();
+        if(colorCircle.getBackground() instanceof ColorDrawable){
+            ColorDrawable colorDrawable= (ColorDrawable) colorCircle.getBackground();
+            int updatedColor=colorDrawable.getColor();
+            resultIntent.putExtra("color",updatedColor);
+        }
+
         resultIntent.putExtra(CURRENT_SUBJECT_NAME,updatedName);
-        resultIntent.putExtra("color",updatedColor);
+        resultIntent.putExtra("ccCheck",ccCheck);
+        resultIntent.putExtra("ccMark",ccMark);
+        resultIntent.putExtra("snCheck",snCheck);
+        resultIntent.putExtra("snMark",snMark);
+        resultIntent.putExtra("tpCheck",tpCheck);
+        resultIntent.putExtra("tpMark",tpMark);
+        resultIntent.putExtra("comment",comment);
+
         resultIntent.putExtra("element_position",position);
 
         Toast.makeText(this, "modifications enregistrées", Toast.LENGTH_SHORT).show();
 
         setResult(RESULT_OK,resultIntent);
         finish();
+    }
+
+    private void calculateAverage(){
+        double caMark=ccCheckbox.isChecked() ? Double.parseDouble(subjectCCInput.getText().toString()) : 0;
+        double finalMark=snCheckbox.isChecked() ? Double.parseDouble(subjectSNInput.getText().toString()) : 0;
+        double practicalMark=tpCheckbox.isChecked() ? Double.parseDouble(subjectTPInput.getText().toString()) : 0;
+
+        try {
+            double subjectAverage= GradeCalculator.calculateAverage(caMark,ccCheckbox.isChecked(),
+                    finalMark,snCheckbox.isChecked(),practicalMark,tpCheckbox.isChecked());
+            //il faut récuperer cette moyenne et l'afficher dans SubjectFragment
+        }
+        catch (IllegalArgumentException e){
+            e.getMessage();
+        }
     }
 }
