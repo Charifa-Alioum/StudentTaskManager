@@ -11,9 +11,11 @@
     android:layout_marginTop="3dp"
     android:layout_marginBottom="3dp">
 
-    <RelativeLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:theme="@style/Base.Theme.StudentTaskManager"
+        android:paddingTop="3dp"
         android:background="@color/black">
 
         <androidx.appcompat.widget.Toolbar
@@ -72,7 +74,7 @@
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    </RelativeLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
 
 
@@ -85,6 +87,7 @@
         android:background="@color/black"
         app:itemTextColor="@color/white"
         app:itemIconTint="@color/white"
+        android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.navTheme"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/navigation_drawer_menu"/>
