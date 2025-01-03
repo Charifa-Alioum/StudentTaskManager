@@ -6,6 +6,10 @@
     android:orientation="vertical"
     tools:context=".SubjectFragment">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:text="Hello"/>
 
     <FrameLayout
         android:layout_width="match_parent"

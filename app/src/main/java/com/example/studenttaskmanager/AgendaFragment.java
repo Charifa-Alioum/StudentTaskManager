@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.studenttaskmanagerdetails.AddEventDialogFragment;
 import com.example.studenttaskmanagerdetails.AgendaAdapter;
 import com.example.studenttaskmanagerdetails.AgendaItem;
+import com.example.studenttaskmanagerinterfaces.OnEventAddedListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import java.util.List;
  * Use the {@link AgendaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AgendaFragment extends Fragment {
+public class AgendaFragment extends Fragment implements OnEventAddedListener {
     private RecyclerView recyclerView;
     private AgendaAdapter agendaAdapter;
     private List<AgendaItem> agendaItems;
@@ -68,7 +69,7 @@ public class AgendaFragment extends Fragment {
             transaction.replace(R.id.fragment_container,addEventDialogFragment);
             transaction.addToBackStack(null);
             transaction.commit();
-            //addEventDialogFragment.show(getChildFragmentManager(), "AddEventDialogFragment");
+
             Toast.makeText(getContext(), "événement ajouté", Toast.LENGTH_SHORT).show();
         });
 
@@ -115,7 +116,8 @@ public class AgendaFragment extends Fragment {
         }
     }
 
-    public void addEvent(String eventName,Calendar eventDate){
+    @Override
+    public void onEventAdded(String eventName,String eventDate,String eventTime){
 
     }
 }

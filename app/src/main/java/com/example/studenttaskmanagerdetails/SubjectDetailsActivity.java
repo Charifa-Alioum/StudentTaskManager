@@ -21,6 +21,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.studenttaskmanager.R;
 import com.example.studenttaskmanagerfeatures.GradeCalculator;
+import com.example.studenttaskmanagerfeatures.PreferenceManager;
+import com.google.gson.Gson;
 
 public class SubjectDetailsActivity extends AppCompatActivity {
     private EditText nameInput;
@@ -34,11 +36,16 @@ public class SubjectDetailsActivity extends AppCompatActivity {
 
     public static final String CURRENT_SUBJECT_NAME="currentSubject";
 
+    private PreferenceManager preferenceManager;
+    private Gson gson;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_subject_details);
+        preferenceManager=PreferenceManager.getInstance(this);
+        gson=new Gson();
 
         nameInput=findViewById(R.id.subject_input);
         colorCircle=findViewById(R.id.color_circle);
@@ -138,7 +145,7 @@ public class SubjectDetailsActivity extends AppCompatActivity {
 
         resultIntent.putExtra("element_position",position);
 
-        Toast.makeText(this, "modifications enregistrées", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Modifications enregistrées", Toast.LENGTH_SHORT).show();
 
         setResult(RESULT_OK,resultIntent);
         finish();
@@ -158,4 +165,6 @@ public class SubjectDetailsActivity extends AppCompatActivity {
             e.getMessage();
         }
     }
+
+
 }
