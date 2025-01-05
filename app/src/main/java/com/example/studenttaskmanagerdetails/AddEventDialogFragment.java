@@ -8,6 +8,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ public class AddEventDialogFragment extends DialogFragment {
     private EditText eventNameEditText;
     private TextView dateTextView;
     private TextView timeTextView;
+    private CheckBox emergencyCheckbox;
     private Calendar selectedDateTime;
 
 
@@ -32,12 +34,14 @@ public class AddEventDialogFragment extends DialogFragment {
         eventNameEditText = view.findViewById(R.id.event_name);
         dateTextView = view.findViewById(R.id.date_text);
         timeTextView = view.findViewById(R.id.time_text);
+        emergencyCheckbox = view.findViewById(R.id.emergency_level);
         Button addEventButton=view.findViewById(R.id.add_event_button);
 
         selectedDateTime=Calendar.getInstance();
 
         dateTextView.setOnClickListener(v->showDatePicker());
         timeTextView.setOnClickListener(v->showTimePicker());
+        //emergencyCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> );
 
         addEventButton.setOnClickListener(v->addEvent());
 

@@ -63,6 +63,7 @@ public class AddHomeworkActivity extends AppCompatActivity {
         String name=editTextName.getText().toString();
         Intent intent=new Intent();
         intent.putExtra("Homework",name);
+        intent.putExtra("DateDue",selectedDate.getTimeInMillis());
         setResult(RESULT_OK,intent);
 
         finish();

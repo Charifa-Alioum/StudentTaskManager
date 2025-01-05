@@ -99,6 +99,7 @@ public class SubjectFragment extends Fragment {
                 intent.putExtra("tpCheck",currentSubject.isTpCheckbox());
                 intent.putExtra("tpMark",currentSubject.getTpMark());
                 intent.putExtra("comment",currentSubject.getCommentZone());
+                preferenceManager.putString("subject_comment",currentSubject.getCommentZone());
 
                 intent.putExtra("element_position",i);
                 startActivityForResult(intent,SUBJECT_MODIFICATION_REQUEST);
@@ -200,6 +201,8 @@ public class SubjectFragment extends Fragment {
                     saveSubjectsToPreferences();
                 })
                 .setNegativeButton("No",null).show();
+
+
     }
 
 }

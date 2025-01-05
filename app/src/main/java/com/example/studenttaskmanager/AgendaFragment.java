@@ -92,7 +92,7 @@ public class AgendaFragment extends Fragment implements OnEventAddedListener {
 
             List<String> events=new ArrayList<>();
             events.add("Event  for" + date);
-            agendaItems.add(new AgendaItem(date,events));
+            agendaItems.add(new AgendaItem(date,events,false));
 
             calendar.add(Calendar.DAY_OF_MONTH,1);
         }

@@ -26,10 +26,20 @@
         android:layout_marginBottom="8dp"/>
 
     <EditText
-        android:id="@+id/time_edit_text"
+        android:id="@+id/start_time_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Heure"
+        android:hint="De"
+        android:focusable="false"
+        android:inputType="none"
+        android:padding="16dp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/end_time_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="A"
         android:focusable="false"
         android:inputType="none"
         android:padding="16dp"

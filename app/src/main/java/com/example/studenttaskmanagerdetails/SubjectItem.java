@@ -1,6 +1,8 @@
 package com.example.studenttaskmanagerdetails;
 
-public class SubjectItem {
+import java.io.Serializable;
+
+public class SubjectItem implements Serializable {
     private String subjectName;
     private int color;
     private boolean ccCheckbox;
@@ -49,5 +51,41 @@ public class SubjectItem {
     }
     public String getCommentZone() {
         return commentZone;
+    }
+
+    public void setCcCheckbox(boolean ccCheckbox) {
+        this.ccCheckbox = ccCheckbox;
+    }
+
+    public void setCcMark(double ccMark) {
+        this.ccMark = ccMark;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public void setCommentZone(String commentZone) {
+        this.commentZone = commentZone;
+    }
+
+    public void setSnCheckbox(boolean snCheckbox) {
+        this.snCheckbox = snCheckbox;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
+
+    public void setSnMark(double snMark) {
+        this.snMark = snMark;
+    }
+
+    public void setTpCheckbox(boolean tpCheckbox) {
+        this.tpCheckbox = tpCheckbox;
+    }
+
+    public void setTpMark(double tpMark) {
+        this.tpMark = tpMark;
     }
 }

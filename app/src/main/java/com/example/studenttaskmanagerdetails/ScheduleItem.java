@@ -3,12 +3,14 @@ package com.example.studenttaskmanagerdetails;
 public class ScheduleItem {
     private String subject;
     private String date;
-    private String time;
+    private String startTime;
+    private String endTime;
 
-    public ScheduleItem(String subject, String date, String time) {
+    public ScheduleItem(String subject, String date, String startTime, String endTime) {
         this.subject = subject;
         this.date = date;
-        this.time = time;
+        this.startTime = startTime;
+        this.endTime=endTime;
     }
 
     public String getSubject() {
@@ -19,7 +21,11 @@ public class ScheduleItem {
         return date;
     }
 
-    public String getTime() {
-        return time;
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public String getEndTime(){
+        return endTime;
     }
 }

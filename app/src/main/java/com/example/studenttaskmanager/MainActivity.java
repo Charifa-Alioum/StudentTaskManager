@@ -19,12 +19,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.studenttaskmanagerdetails.SubjectItem;
+import com.example.studenttaskmanagerfeatures.SubjectDialogFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SubjectDialogFragment.OnSubjectSelectedListener {
 
     DrawerLayout drawerLayout;
     BottomNavigationView bottomNavigationView;
@@ -118,5 +120,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentTransaction transaction=fragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_container,fragment);
         transaction.commit();
+    }
+
+    @Override
+    public void onSubjectSelected(SubjectItem subject){
+
     }
 }

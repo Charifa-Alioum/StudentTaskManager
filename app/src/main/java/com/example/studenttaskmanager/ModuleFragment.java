@@ -18,6 +18,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.studenttaskmanagerdetails.ChildItemsActivity;
@@ -42,6 +44,9 @@ public class ModuleFragment extends Fragment {
     private HashMap<String, List<String>> childItems;
     private FloatingActionButton addModuleFab;
     private ArrayAdapter<ModuleItem> adapter;
+
+    private ProgressBar modulesProgressBar;
+    private TextView modulesAverageTextView;
 
     private PreferenceManager preferenceManager;
     private Gson gson;
@@ -71,7 +76,8 @@ public class ModuleFragment extends Fragment {
         View view=inflater.inflate(R.layout.fragment_module,container,false);
         listViewModules=view.findViewById(R.id.list_view_modules);
         addModuleFab=view.findViewById(R.id.addModuleFab);
-
+        modulesProgressBar=view.findViewById(R.id.modules_average);
+        modulesAverageTextView=view.findViewById(R.id.average_value_modules);
         preferenceManager=PreferenceManager.getInstance(getContext());
         gson=new Gson();
 
@@ -97,6 +103,7 @@ public class ModuleFragment extends Fragment {
 
         addModuleFab.setOnClickListener(v-> addModuleToList());
         saveModulesToPreferences();
+        calculateModulesAverage();
         return view;
     }
 
@@ -172,6 +179,20 @@ public class ModuleFragment extends Fragment {
                     saveModulesToPreferences();
                 })
                 .setNegativeButton("No",null).show();
+    }
+
+    private void calculateModulesAverage(){
+        double average;
+        double averageSum=0;
+        int numberOfCredits=0;
+        for (ModuleItem moduleItem : moduleList){
+            double moduleAverage=preferenceManager.getDouble("module average for : "+moduleItem.getModuleName(),1);
+            averageSum=averageSum+(moduleAverage*moduleItem.getCreditNumber());
+            numberOfCredits=numberOfCredits+moduleItem.getCreditNumber();
+        }
+        average=averageSum/numberOfCredits;
+        modulesAverageTextView.setText(Float.toString((float) average));
+        modulesProgressBar.setProgress((int) average);
     }
 
 }
