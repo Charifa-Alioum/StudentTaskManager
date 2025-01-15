@@ -3,15 +3,18 @@ package com.example.studenttaskmanager;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -19,11 +22,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.studenttaskmanagerdetails.ScheduleAdapter;
 import com.example.studenttaskmanagerdetails.ScheduleItem;
+import com.example.studenttaskmanagerdetails.SubjectAdapter;
 import com.example.studenttaskmanagerdetails.SubjectItem;
 import com.example.studenttaskmanagerfeatures.PreferenceManager;
 import com.example.studenttaskmanagerfeatures.SubjectDialogFragment;
+import com.example.studenttaskmanagerfeatures.SubjectViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -35,17 +42,29 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class TimetableFragment extends Fragment implements SubjectDialogFragment.OnSubjectSelectedListener{
+public class TimetableFragment extends Fragment implements SubjectDialogFragment.OnSubjectSelectedListener, SubjectDialogFragment.ScheduleDialogListener{
 
     /*private RecyclerView recyclerView;
     private ScheduleAdapter scheduleAdapter;
     private List<ScheduleItem> scheduleList;*/
     private CalendarView calendarView;
+    private ListView listView;
+
+    private Map<LocalDate,List<ScheduleItem>> subjectItemsMap=new HashMap<>();
+    private ArrayAdapter<ScheduleItem> adapter;
+
+    private SubjectViewModel viewModel;
+
+    private SubjectDialogFragment.OnSubjectSelectedListener listener;
+    private SubjectDialogFragment.ScheduleDialogListener scheduleListener;
 
     private EditText subjectEditText;
 
+    private LocalDate selectedDate;
     private PreferenceManager preferenceManager;
     private Gson gson;
 
@@ -63,16 +82,27 @@ public class TimetableFragment extends Fragment implements SubjectDialogFragment
         recyclerView.setAdapter(scheduleAdapter);*/
 
         calendarView=view.findViewById(R.id.calendar_timetable);
+        listView=view.findViewById(R.id.list_view);
         FloatingActionButton addButton = view.findViewById(R.id.add_button);
 
-
+        calendarView.setOnDateChangeListener((view1,year,month,dayOfMonth) ->{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                selectedDate=LocalDate.of(year,month+1,dayOfMonth);
+            }
+            updateListView(selectedDate);
+        });
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SubjectDialogFragment dialogFragment=new SubjectDialogFragment();
+                //dialogFragment.setListener(this);
                 showAddScheduleDialog();
             }
         });
+        adapter=new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, new ArrayList());
+        listView.setAdapter(adapter);
 
+        viewModel=new ViewModelProvider(requireActivity()).get(SubjectViewModel.class);
         return view;
     }
 
@@ -125,7 +155,9 @@ public class TimetableFragment extends Fragment implements SubjectDialogFragment
                         String endTime= endTimeEditText.getText().toString();
 
                         if (!subject.isEmpty() && !date.isEmpty() && !startTime.isEmpty() && !endTime.isEmpty()) {
-
+                            ScheduleItem scheduleItem=new ScheduleItem(subject,date,startTime,endTime);
+                            scheduleListener.onScheduleItemAdded(scheduleItem);
+                            Toast.makeText(getContext(), "Programme ajouté", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getContext(), "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
                         }
@@ -167,13 +199,12 @@ public class TimetableFragment extends Fragment implements SubjectDialogFragment
     private void showSubjectPickerDialog(final EditText subjectEditText){
         List<SubjectItem> subjects=getSubjects();
         SubjectDialogFragment dialog=SubjectDialogFragment.newInstance(subjects);
+        dialog.setListener(this);
         dialog.setTargetFragment(TimetableFragment.this,1);
         dialog.show(getParentFragmentManager(),"SubjectDialog");
 
         Toast.makeText(getContext(),"pick a subject",Toast.LENGTH_SHORT).show();
     }
-
-
 
     public List<SubjectItem> getSubjects(){
         String jsonSubjects=preferenceManager.getString("subject_list","[]");
@@ -202,4 +233,18 @@ public class TimetableFragment extends Fragment implements SubjectDialogFragment
         }
     }
 
+    private void updateListView(LocalDate localDate){
+        List<ScheduleItem> scheduleItems=subjectItemsMap.getOrDefault(localDate,new ArrayList<>());
+        adapter.clear();
+        adapter.addAll(scheduleItems);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onScheduleItemAdded(ScheduleItem scheduleItem){
+        List<ScheduleItem> scheduleItems=subjectItemsMap.getOrDefault(selectedDate,new ArrayList<>());
+        scheduleItems.add(scheduleItem);
+        subjectItemsMap.put(selectedDate,scheduleItems);
+        updateListView(selectedDate);
+    }
 }

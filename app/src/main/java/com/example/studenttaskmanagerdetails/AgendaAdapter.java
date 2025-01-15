@@ -32,7 +32,7 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.AgendaView
         AgendaItem agendaItem=agendaItems.get(position);
         holder.dateTextView.setText(agendaItem.getDate());
 
-        holder.eventsTextView.setText(agendaItem.getEvents().toString());
+        //holder.eventsTextView.setText(agendaItem.getEvents().toString());
     }
 
     @Override

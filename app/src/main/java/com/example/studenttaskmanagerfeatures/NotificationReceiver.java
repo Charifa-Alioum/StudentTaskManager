@@ -16,10 +16,9 @@ public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent){
         String title=intent.getStringExtra("title");
-        String message=intent.getStringExtra("message");
 
         NotificationManager notificationManager= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        String channelId="default_channel";
+        String channelId="event_channel";
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel channel=new NotificationChannel(channelId,"Default Channel",NotificationManager.IMPORTANCE_DEFAULT);
@@ -27,9 +26,9 @@ public class NotificationReceiver extends BroadcastReceiver {
         }
 
         NotificationCompat.Builder builder=new NotificationCompat.Builder(context,channelId)
-                .setSmallIcon(R.drawable.taskmanager)
-                .setContentTitle(title)
-                .setContentText(message)
+                .setSmallIcon(R.drawable.task_manager)
+                .setContentTitle("Event: "+title)
+                .setContentText("You have an upcoming event")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true);
 

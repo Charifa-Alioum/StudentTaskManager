@@ -1,6 +1,7 @@
 package com.example.studenttaskmanagerdetails;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.studenttaskmanager.R;
@@ -26,9 +28,47 @@ public class AddEventDialogFragment extends DialogFragment {
     private TextView timeTextView;
     private CheckBox emergencyCheckbox;
     private Calendar selectedDateTime;
+    private AddEventDialogListener listener;
 
+    public interface AddEventDialogListener{
+        void onEventAdded(AgendaItem agendaItem);
+    }
 
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public void setListener(AddEventDialogListener listener){
+        this.listener=listener;
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState){
+        AlertDialog.Builder builder=new AlertDialog.Builder(requireActivity());
+        View view=requireActivity().getLayoutInflater().inflate(R.layout.dialog_add_event,null);
+        eventNameEditText = view.findViewById(R.id.event_name);
+        dateTextView = view.findViewById(R.id.date_text);
+        timeTextView = view.findViewById(R.id.time_text);
+        emergencyCheckbox = view.findViewById(R.id.emergency_level);
+
+        selectedDateTime=Calendar.getInstance();
+        dateTextView.setOnClickListener(v->showDatePicker());
+        timeTextView.setOnClickListener(v->showTimePicker());
+
+        builder.setView(view)
+                .setTitle("Add an event")
+                .setPositiveButton("Add",(dialog, which) ->{
+                    String title=eventNameEditText.getText().toString();
+                    String date=dateTextView.getText().toString();
+                    String time=timeTextView.getText().toString();
+                    boolean isUrgent=emergencyCheckbox.isChecked();
+
+                    AgendaItem item=new AgendaItem(title,date,time,isUrgent);
+                    if (listener!=null){
+                        listener.onEventAdded(item);
+                    }
+                })
+                .setNegativeButton("Cancel", (dialog,which) -> dialog.dismiss());
+        return builder.create();
+    }
+    /*public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_add_event,container,false);
 
         eventNameEditText = view.findViewById(R.id.event_name);
@@ -47,7 +87,7 @@ public class AddEventDialogFragment extends DialogFragment {
 
         return view;
 
-    }
+    }*/
 
     private void showDatePicker(){
         DatePickerDialog datePickerDialog=new DatePickerDialog(

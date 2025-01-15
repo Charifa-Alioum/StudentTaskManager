@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
@@ -18,6 +19,7 @@ import com.example.studenttaskmanager.MainActivity;
 import com.example.studenttaskmanager.R;
 import com.example.studenttaskmanager.TimetableFragment;
 import com.example.studenttaskmanagerdetails.ChildItemsActivity;
+import com.example.studenttaskmanagerdetails.ScheduleItem;
 import com.example.studenttaskmanagerdetails.SubjectAdapter;
 import com.example.studenttaskmanagerdetails.SubjectItem;
 
@@ -29,16 +31,18 @@ public class SubjectDialogFragment extends DialogFragment {
     private List<SubjectItem> subjectList;
     private SubjectAdapter adapter;
     private OnSubjectSelectedListener listener;
+    private ScheduleDialogListener scheduleListener;
 
     public interface OnSubjectSelectedListener{
         void onSubjectSelected(SubjectItem subject);
     }
 
-
+    public interface ScheduleDialogListener{
+        void onScheduleItemAdded(ScheduleItem scheduleItem);
+    }
     public SubjectDialogFragment() {
         // Required empty public constructor
     }
-
 
     public static SubjectDialogFragment newInstance(List<SubjectItem> subjects) {
         SubjectDialogFragment fragment = new SubjectDialogFragment();
@@ -53,7 +57,15 @@ public class SubjectDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments()!=null){
             subjectList= (List<SubjectItem>) getArguments().getSerializable("my_subject_list");
+            for (SubjectItem subject : subjectList){
+                getArguments().putSerializable("the subject : "+subject.getSubjectName(),subject);
+            }
         }
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState){
+        return super.onCreateDialog(savedInstanceState);
     }
 
     @Override
@@ -96,10 +108,17 @@ public class SubjectDialogFragment extends DialogFragment {
         super.onAttach(context);
         if (context instanceof OnSubjectSelectedListener){
             listener= (OnSubjectSelectedListener) context;
-        }
-        else {
+        } else if (context instanceof ScheduleDialogListener) {
+            scheduleListener= (ScheduleDialogListener) context;
+            Log.d("SubjectDialogFragment.ScheduleDialogListener","the listener's not null");
+        } else {
+            Log.e("SubjectDialogFragment.ScheduleDialogListener","the schedule listener's null");
             throw new RuntimeException(context.toString() + " must implement OnSubjectSelectedListener");
         }
+    }
+
+    public void setListener(ScheduleDialogListener listener){
+        this.scheduleListener=listener;
     }
 
 }
